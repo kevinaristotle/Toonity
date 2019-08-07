@@ -1,0 +1,4 @@
+* -text
+*.cs      text eol=lf diff=csharp
+*.shader  text eol=lf
+*.meta    text eol=lf
