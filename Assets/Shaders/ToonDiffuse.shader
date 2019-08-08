@@ -11,8 +11,8 @@
         CGPROGRAM
         #pragma surface surf LambertToon
         
-        inline fixed4 UnityLambertLightToon (SurfaceOutput s, UnityLight light) {
-            fixed diff = max (0, ceil(dot(s.Normal, light.dir)));
+        inline fixed4 UnityLambertLightToon(SurfaceOutput s, UnityLight light) {
+            fixed diff = max(0, ceil(dot(s.Normal, light.dir)));
 
             fixed4 c;
             c.rgb = s.Albedo * light.color * diff;
@@ -20,9 +20,9 @@
             return c;
         }
         
-        inline fixed4 LightingLambertToon (SurfaceOutput s, UnityGI gi) {
+        inline fixed4 LightingLambertToon(SurfaceOutput s, UnityGI gi) {
             fixed4 c;
-            c = UnityLambertLightToon (s, gi.light);
+            c = UnityLambertLightToon(s, gi.light);
 
             #ifdef UNITY_LIGHT_FUNCTION_APPLY_INDIRECT
                 c.rgb += s.Albedo * gi.indirect.diffuse;
@@ -36,7 +36,7 @@
             UnityGIInput data,
             inout UnityGI gi)
         {
-            gi = UnityGlobalIllumination (data, 1.0, s.Normal);
+            gi = UnityGlobalIllumination(data, 1.0, s.Normal);
         }
 
         sampler2D _MainTex;
@@ -46,7 +46,7 @@
             float2 uv_MainTex;
         };
 
-        void surf (Input IN, inout SurfaceOutput o) {
+        void surf(Input IN, inout SurfaceOutput o) {
             fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = c.rgb;
             o.Alpha = c.a;
