@@ -1,4 +1,4 @@
-Shader "Toonity/Toon Parallax Specular" {
+Shader "Toonity/Legacy Shaders/Parallax Specular" {
     Properties {
         _Color ("Main Color", Color) = (1,1,1,1)
         _SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 1)
@@ -14,6 +14,7 @@ Shader "Toonity/Toon Parallax Specular" {
         LOD 600
 
         CGPROGRAM
+		#include "CGIncludes/Toon-Lighting.cginc"
         #pragma surface surf BlinnPhongToon
         #pragma target 3.0
 
@@ -29,41 +30,6 @@ Shader "Toonity/Toon Parallax Specular" {
             float2 uv_BumpMap;
             float3 viewDir;
         };
-
-        inline fixed4 UnityBlinnPhongLightToon(SurfaceOutput s, half3 viewDir, UnityLight light) {
-            half3 n = normalize(s.Normal);
-            half3 h = normalize(light.dir + viewDir);
-
-            fixed diff = max(0, ceil(dot(n, light.dir)));
-
-            float nh = max(0, dot(n, h));
-            float spec = max(0, ceil(pow(nh, s.Specular * 8192.0) * s.Gloss));
-
-            fixed4 c;
-            c.rgb = s.Albedo * light.color * diff + light.color * _SpecColor.rgb * spec;
-            c.a = s.Alpha;
-
-            return c;
-        }
-
-        inline fixed4 LightingBlinnPhongToon(SurfaceOutput s, half3 viewDir, UnityGI gi) {
-            fixed4 c;
-            c = UnityBlinnPhongLightToon(s, viewDir, gi.light);
-
-            #ifdef UNITY_LIGHT_FUNCTION_APPLY_INDIRECT
-                c.rgb += s.Albedo * gi.indirect.diffuse;
-            #endif
-
-            return c;
-        }
-
-        inline void LightingBlinnPhongToon_GI (
-            SurfaceOutput s,
-            UnityGIInput data,
-            inout UnityGI gi)
-        {
-            gi = UnityGlobalIllumination(data, 1.0, s.Normal);
-        }
 
         void surf (Input IN, inout SurfaceOutput o) {
             half h = tex2D (_ParallaxMap, IN.uv_BumpMap).w;
@@ -81,5 +47,5 @@ Shader "Toonity/Toon Parallax Specular" {
         ENDCG
     }
 
-    FallBack "Toonity/Toon Bumped Specular"
+    FallBack "Toonity/Legacy Shaders/Bumped Specular"
 }

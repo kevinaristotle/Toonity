@@ -1,4 +1,4 @@
-Shader "Toonity/Toon Parallax Diffuse" {
+Shader "Toonity/Legacy Shaders/Parallax Diffuse" {
     Properties {
         _Color ("Main Color", Color) = (1,1,1,1)
         _Parallax ("Height", Range (0.005, 0.08)) = 0.02
@@ -20,34 +20,6 @@ Shader "Toonity/Toon Parallax Diffuse" {
         float3 viewDir;
     };
 
-    inline fixed4 UnityLambertLightToon(SurfaceOutput s, UnityLight light) {
-        fixed diff = max(0, ceil(dot(s.Normal, light.dir)));
-
-        fixed4 c;
-        c.rgb = s.Albedo * light.color * diff;
-        c.a = s.Alpha;
-        return c;
-    }
-        
-    inline fixed4 LightingLambertToon(SurfaceOutput s, UnityGI gi) {
-        fixed4 c;
-        c = UnityLambertLightToon(s, gi.light);
-
-        #ifdef UNITY_LIGHT_FUNCTION_APPLY_INDIRECT
-            c.rgb += s.Albedo * gi.indirect.diffuse;
-        #endif
-
-        return c;
-    }
-    
-    inline void LightingLambertToon_GI (
-        SurfaceOutput s,
-        UnityGIInput data,
-        inout UnityGI gi)
-    {
-        gi = UnityGlobalIllumination(data, 1.0, s.Normal);
-    }
-
     void surf (Input IN, inout SurfaceOutput o) {
         half h = tex2D (_ParallaxMap, IN.uv_BumpMap).w;
         float2 offset = ParallaxOffset (h, _Parallax, IN.viewDir);
@@ -66,6 +38,7 @@ Shader "Toonity/Toon Parallax Diffuse" {
         LOD 500
 
         CGPROGRAM
+		#include "CGIncludes/Toon-Lighting.cginc"
         #pragma surface surf LambertToon
         #pragma target 3.0
         ENDCG
@@ -76,9 +49,10 @@ Shader "Toonity/Toon Parallax Diffuse" {
         LOD 500
 
         CGPROGRAM
+		#include "CGIncludes/Toon-Lighting.cginc"
         #pragma surface surf LambertToon nodynlightmap
         ENDCG
     }
 
-    FallBack "Toonity/Toon Bumped Diffuse"
+    FallBack "Toonity/Legacy Shaders/Bumped Diffuse"
 }
