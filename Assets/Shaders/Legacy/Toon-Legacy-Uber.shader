@@ -6,6 +6,7 @@ Shader "Toonity/Legacy Shaders/Uber" {
 		_Parallax ("Height", Range (0.005, 0.08)) = 0.02
 		_ReflectColor ("Reflection Color", Color) = (1,1,1,0.5)
         _MainTex ("Base (RGB) Gloss (A)", 2D) = "white" {}
+		_DecalTex ("Decal (RGBA)", 2D) = "black" {}
         _Illum ("Illumin (A)", 2D) = "white" {}
 		_Cube ("Reflection Cubemap", Cube) = "" {}
         _BumpMap ("Normalmap", 2D) = "bump" {}
@@ -22,6 +23,7 @@ Shader "Toonity/Legacy Shaders/Uber" {
         #pragma target 3.0
 
         sampler2D _MainTex;
+		sampler2D _DecalTex;
         sampler2D _BumpMap;
 		sampler2D _ParallaxMap;
         sampler2D _Illum;
@@ -34,6 +36,7 @@ Shader "Toonity/Legacy Shaders/Uber" {
 
         struct Input {
             float2 uv_MainTex;
+			float2 uv_DecalTex;
             float2 uv_Illum;
             float2 uv_BumpMap;
 			float3 viewDir;
@@ -49,7 +52,10 @@ Shader "Toonity/Legacy Shaders/Uber" {
             IN.uv_Illum += offset;
 
             fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
-            fixed4 c = tex * _Color;
+			half4 decal = tex2D(_DecalTex, IN.uv_DecalTex);
+			fixed4 c = tex;
+            c.rgb = lerp (c.rgb, decal.rgb, decal.a);
+            c *= _Color;
             o.Albedo = c.rgb;
             o.Emission = c.rgb * tex2D(_Illum, IN.uv_Illum).a;
         #if defined (UNITY_PASS_META)
