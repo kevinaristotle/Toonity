@@ -125,4 +125,5 @@ Shader "Toonity/Legacy Shaders/Uber" {
     }
 
     FallBack "Toonity/Legacy Shaders/Diffuse"
+    CustomEditor "ToonLegacyUberShaderGUI"
 }
