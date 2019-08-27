@@ -2,6 +2,8 @@ Shader "Toonity/Legacy Shaders/Uber" {
     Properties {
         _Color ("Main Color", Color) = (1,1,1,1)
         _MainTex ("Base (RGB) Gloss (A)", 2D) = "white" {}
+        [Toggle(ENABLE_TOONRAMP)] _ToonRampEnabled ("Toon Ramp?", Float) = 0
+        _ToonRampTex ("Toon Ramp", 2D) = "black" {}
         [Toggle(ENABLE_SPECULAR)] _SpecularEnabled ("Specular?", Float) = 0
         _SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 1)
         [PowerSlider(5.0)] _Shininess ("Shininess", Range (0.01, 1)) = 0.078125
@@ -27,6 +29,7 @@ Shader "Toonity/Legacy Shaders/Uber" {
         #include "CGIncludes/Toon-Lighting.cginc"
         #pragma surface surf BlinnPhongToon
         #pragma target 3.5
+        #pragma shader_feature ENABLE_TOONRAMP
         #pragma shader_feature ENABLE_SPECULAR
         #pragma shader_feature ENABLE_NORMALMAP
         #pragma shader_feature ENABLE_REFLECTION

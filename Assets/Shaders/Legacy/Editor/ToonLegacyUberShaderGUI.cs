@@ -5,6 +5,8 @@ public class ToonLegacyUberShaderGUI : ShaderGUI
 {
     MaterialProperty color;
     MaterialProperty mainTex;
+    MaterialProperty toonRampEnabled;
+    MaterialProperty toonRampTex;
     MaterialProperty specularEnabled;
     MaterialProperty specColor;
     MaterialProperty shininess;
@@ -24,6 +26,8 @@ public class ToonLegacyUberShaderGUI : ShaderGUI
 
     static readonly GUIContent colorText = new GUIContent("Main Color","");
     static readonly GUIContent mainTexText = new GUIContent("Base (RGB) Gloss (A)","");
+    static readonly GUIContent toonRampEnabledText = new GUIContent("Toon Ramp?", "");
+    static readonly GUIContent toonRampTexText = new GUIContent("Ramp", "");
     static readonly GUIContent specularEnabledText = new GUIContent("Specular?","");
     static readonly GUIContent specColorText = new GUIContent("Specular Color","");
     static readonly GUIContent shininessText = new GUIContent("Shininess","");
@@ -45,6 +49,8 @@ public class ToonLegacyUberShaderGUI : ShaderGUI
     {
         color = FindProperty("_Color", props);
         mainTex = FindProperty("_MainTex", props);
+        toonRampEnabled = FindProperty("_ToonRampEnabled", props);
+        toonRampTex = FindProperty("_ToonRampTex", props);
         specularEnabled = FindProperty("_SpecularEnabled", props);
         specColor = FindProperty("_SpecColor", props);
         shininess = FindProperty("_Shininess", props);
@@ -71,6 +77,10 @@ public class ToonLegacyUberShaderGUI : ShaderGUI
 
         materialEditor.ShaderProperty(color, colorText);
         materialEditor.ShaderProperty(mainTex, mainTexText);
+        materialEditor.ShaderProperty(toonRampEnabled, toonRampEnabledText);
+        if (toonRampEnabled.floatValue >= 1.0f) {
+            materialEditor.ShaderProperty(toonRampTex, toonRampTexText);
+        }
         materialEditor.ShaderProperty(specularEnabled, specularEnabledText);
         if (specularEnabled.floatValue >= 1.0f) {
             materialEditor.ShaderProperty(specColor, specColorText);
