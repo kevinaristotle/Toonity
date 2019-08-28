@@ -7,6 +7,9 @@ public class ToonLegacyUberShaderGUI : ShaderGUI
     MaterialProperty mainTex;
     MaterialProperty toonRampEnabled;
     MaterialProperty toonRampTex;
+    MaterialProperty rimEnabled;
+    MaterialProperty rimColor;
+    MaterialProperty rimPower;
     MaterialProperty specularEnabled;
     MaterialProperty specColor;
     MaterialProperty shininess;
@@ -28,6 +31,9 @@ public class ToonLegacyUberShaderGUI : ShaderGUI
     static readonly GUIContent mainTexText = new GUIContent("Base (RGB) Gloss (A)","");
     static readonly GUIContent toonRampEnabledText = new GUIContent("Toon Ramp?", "");
     static readonly GUIContent toonRampTexText = new GUIContent("Ramp", "");
+    static readonly GUIContent rimEnabledText = new GUIContent("Rim?", "");
+    static readonly GUIContent rimColorText = new GUIContent("Rim Color", "");
+    static readonly GUIContent rimPowerText = new GUIContent("Rim Power", "");
     static readonly GUIContent specularEnabledText = new GUIContent("Specular?","");
     static readonly GUIContent specColorText = new GUIContent("Specular Color","");
     static readonly GUIContent shininessText = new GUIContent("Shininess","");
@@ -51,6 +57,9 @@ public class ToonLegacyUberShaderGUI : ShaderGUI
         mainTex = FindProperty("_MainTex", props);
         toonRampEnabled = FindProperty("_ToonRampEnabled", props);
         toonRampTex = FindProperty("_ToonRampTex", props);
+        rimEnabled = FindProperty("_RimEnabled", props);
+        rimColor = FindProperty("_RimColor", props);
+        rimPower = FindProperty("_RimPower", props);
         specularEnabled = FindProperty("_SpecularEnabled", props);
         specColor = FindProperty("_SpecColor", props);
         shininess = FindProperty("_Shininess", props);
@@ -80,6 +89,12 @@ public class ToonLegacyUberShaderGUI : ShaderGUI
         materialEditor.ShaderProperty(toonRampEnabled, toonRampEnabledText);
         if (toonRampEnabled.floatValue >= 1.0f) {
             materialEditor.ShaderProperty(toonRampTex, toonRampTexText);
+        }
+        materialEditor.ShaderProperty(rimEnabled, rimEnabledText);
+        if (rimEnabled.floatValue >= 1.0f)
+        {
+            materialEditor.ShaderProperty(rimColor, rimColorText);
+            materialEditor.ShaderProperty(rimPower, rimPowerText);
         }
         materialEditor.ShaderProperty(specularEnabled, specularEnabledText);
         if (specularEnabled.floatValue >= 1.0f) {

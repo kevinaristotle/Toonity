@@ -4,6 +4,9 @@ Shader "Toonity/Legacy Shaders/Uber" {
         _MainTex ("Base (RGB) Gloss (A)", 2D) = "white" {}
         [Toggle(ENABLE_TOONRAMP)] _ToonRampEnabled ("Toon Ramp?", Float) = 0
         _ToonRampTex ("Toon Ramp", 2D) = "black" {}
+        [Toggle(ENABLE_RIM)] _RimEnabled ("Rim?", Float) = 0
+        _RimColor ("Rim Color", Color) = (0.6, 0.6, 0.6)
+        [PowerSlider(5.0)] _RimPower ("Rim Power", Range(0.01, 1.0)) = 0.1
         [Toggle(ENABLE_SPECULAR)] _SpecularEnabled ("Specular?", Float) = 0
         _SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 1)
         [PowerSlider(5.0)] _Shininess ("Shininess", Range (0.01, 1)) = 0.078125
@@ -30,6 +33,7 @@ Shader "Toonity/Legacy Shaders/Uber" {
         #pragma surface surf BlinnPhongToon
         #pragma target 3.5
         #pragma shader_feature ENABLE_TOONRAMP
+        #pragma shader_feature ENABLE_RIM
         #pragma shader_feature ENABLE_SPECULAR
         #pragma shader_feature ENABLE_NORMALMAP
         #pragma shader_feature ENABLE_REFLECTION
@@ -39,6 +43,10 @@ Shader "Toonity/Legacy Shaders/Uber" {
 
         fixed4 _Color;
         sampler2D _MainTex;
+    #if ENABLE_RIM
+        half3 _RimColor;
+        half _RimPower;
+    #endif
     #if ENABLE_SPECULAR
         half _Shininess;
     #endif
@@ -78,6 +86,8 @@ Shader "Toonity/Legacy Shaders/Uber" {
         #endif
         #if ENABLE_PARALLAX
             float2 uv_ParallaxMap;
+        #endif
+        #if ENABLE_RIM || ENABLE_PARALLAX
             float3 viewDir;
         #endif
         };
@@ -122,6 +132,10 @@ Shader "Toonity/Legacy Shaders/Uber" {
             reflcol *= tex.a;
             o.Emission += reflcol.rgb * _ReflectColor.rgb;
             o.Alpha *= reflcol.a * _ReflectColor.a;
+        #endif
+        #if ENABLE_RIM
+            half rim = 1.0 - saturate(dot(IN.viewDir, o.Normal));
+            o.Emission += _RimColor * pow(rim, _RimPower * 32);
         #endif
         }
         ENDCG
